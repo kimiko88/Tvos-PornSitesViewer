@@ -10,7 +10,6 @@ import UIKit
 import Foundation
 
 
-
 class WebSite{
     var ImageLink: String
     var Name: String
