@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     func SetSite() {
         self.sites.append(WebSite(imageLink: "http://cdn1f.static.youporn.phncdn.com/cb/bundles/youpornwebfront/images/l_youporn_black.png", name: "YouPorn", homeURL: "http://www.youporn.com"))
             
-         self.sites.append(WebSite(imageLink: "http://img100.xvideos.com/videos/thumbs/xvideos.gif", name: "Xvideos", homeURL: "www.xvideos.com"))
+         self.sites.append(WebSite(imageLink: "http://img100.xvideos.com/videos/thumbs/xvideos.gif", name: "Xvideos", homeURL: "http://www.xvideos.com"))
         
          self.sites.append(WebSite(imageLink: "http://cdn1b.static.pornhub.phncdn.com/www-static/images/pornhub_logo_straight.png", name: "Pornhub", homeURL: "http://www.pornhub.com"))
         
