@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="XvideosViewer" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="fHg-Ib-ZJs" kind="show" identifier="HomeSelection" id="dSw-d0-8Xr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-596" y="2076"/>
+        </scene>
+        <!--Video Controller-->
+        <scene sceneID="ZeR-i7-kyo">
+            <objects>
+                <viewController id="Qvi-3x-Rnw" userLabel="Video Controller" customClass="VideoController" customModule="XvideosViewer" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OI0-lX-d3U"/>
+                        <viewControllerLayoutGuide type="bottom" id="2mM-KE-d3e"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yi0-fp-rfu">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <connections>
+                        <segue destination="SC9-Zo-3vu" kind="show" identifier="SeeVideo" id="yxJ-P9-6rd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cPu-Oh-Ezk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-305" y="4691"/>
+        </scene>
+        <!--AV Player View Controller-->
+        <scene sceneID="u0S-fW-fp4">
+            <objects>
+                <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="SC9-Zo-3vu" customClass="AVVideoPlayerController" customModule="XvideosViewer" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eIk-Oc-eI7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-356" y="5914"/>
+        </scene>
+        <!--Home Selection Controller-->
+        <scene sceneID="7M5-U3-yit">
+            <objects>
+                <viewController id="fHg-Ib-ZJs" customClass="HomeSelectionController" customModule="XvideosViewer" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="da2-KA-dFZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="cgh-No-VCc"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="f5c-Nx-KU9">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <connections>
+                        <segue destination="Qvi-3x-Rnw" kind="show" identifier="Video" id="6vN-qL-SFE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bei-RG-Xkx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-322" y="3313"/>
+        </scene>
+    </scenes>
+</document>
