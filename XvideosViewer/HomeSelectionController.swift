@@ -13,7 +13,6 @@
 import Foundation
 import UIKit
 
-
 class Video{
     var Link: String
     var ImageLink: String
@@ -25,6 +24,7 @@ class Video{
         Title = title
     }
 }
+
 
 extension Array where Element : Equatable {
     var unique: [Element] {

@@ -24,6 +24,7 @@ class VideoController: UIViewController {
     var video: Video!
     var webSiteTitle: String = ""
     
+    
     var downloadLinks = [DownloadLink]()
     
     override func viewDidLoad() {

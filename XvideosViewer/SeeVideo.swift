@@ -24,6 +24,7 @@ class AVVideoPlayerController: AVPlayerViewController{
     }
     
     
+    
     func tick() {//Failed case
         if(player!.status == .Failed)
         {

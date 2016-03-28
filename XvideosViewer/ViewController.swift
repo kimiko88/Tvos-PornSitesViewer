@@ -21,7 +21,6 @@ class WebSite{
         Name = name
         HomeURL = NSURL(string: homeURL)!
     }
-
 }
 
 
