@@ -113,7 +113,6 @@ class ViewController: UIViewController {
     }
     
     
-    
     func chargeSiteImageAsync(image: String, index: Int, name: String){
         let url = NSURL(string: image)
         if(( (url == nil || (url?.hashValue) == nil) || name == "PornMD")){

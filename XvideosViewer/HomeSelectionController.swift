@@ -958,6 +958,7 @@ class HomeSelectionController: UIViewController {
         return CGRectMake(CGFloat(x), CGFloat(y), width, height)
     }
     
+    
     func createButton(image: UIImage, index: Int,video: Video){
         let button = UIButton(type: UIButtonType.System)
         button.contentVerticalAlignment = UIControlContentVerticalAlignment.Bottom
