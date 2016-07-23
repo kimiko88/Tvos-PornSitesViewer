@@ -986,8 +986,10 @@ class HomeSelectionController: UIViewController {
         }else{
             let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
                 let image = UIImage(data: data!)
+                    if(image != nil){
                 dispatch_async(dispatch_get_main_queue()){
                     self.createButton(image!,index: index,video: video)
+                }
                 }
             }
             task.resume()
