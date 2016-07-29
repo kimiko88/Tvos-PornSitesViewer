@@ -136,7 +136,7 @@ class HomeSelectionController: UIViewController {
                 tempurl = "http://www.xtube.com/video/\(actualPage + 1)"
             }
             let url = NSURL(string:tempurl)!
-            ThumbzillaCharge(url)
+            XTubeCharge(url)
         }
 //        if(selectedSite == "YouJizz")
 //        {
@@ -259,8 +259,7 @@ class HomeSelectionController: UIViewController {
     func PornhubCharge(url: NSURL){
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
             let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!.stringByReplacingOccurrencesOfString("\n", withString: "").stringByReplacingOccurrencesOfString("\t", withString: "")
-            var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp:
-                "<img\\s+(?:[^>]*?\\s+)?data-end")//"<img\\s+(?:[^>]*?\\s+)?src=\"http://([^\"]*)?([^<]*)"
+            var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "<img.*?src=\"([^\"]*)\".*?data-end=\"*\"[^>]*>")
             var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp:
                 "class=\"phimage\">(\\s*)<a\\s+(?:[^>]*?\\s+)?href=\"/view_video.php?([^\"]*)\"?\\stitle=\"([^\"]*)\"")
             print(imageLink.count)
