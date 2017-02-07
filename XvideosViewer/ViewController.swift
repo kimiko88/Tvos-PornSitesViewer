@@ -13,12 +13,12 @@ import Foundation
 class WebSite{
     var ImageLink: String
     var Name: String
-    var HomeURL: NSURL
+    var HomeURL: URL
     init(imageLink: String, name: String, homeURL: String)
     {
         ImageLink = imageLink
         Name = name
-        HomeURL = NSURL(string: homeURL)!
+        HomeURL = URL(string: homeURL)!
     }
 }
 
@@ -26,7 +26,7 @@ class WebSite{
 class ViewController: UIViewController {
     var videos = [Video]()
     var actualPage = 0;
-    var bounds = UIScreen.mainScreen().bounds
+    var bounds = UIScreen.main.bounds
     var scroll = UIScrollView()
     var field = UITextField()
     var isSearch: Bool = false
@@ -37,7 +37,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view = self.scroll;
-        self.scroll.backgroundColor = UIColor.blackColor()
+        self.scroll.backgroundColor = UIColor.black
         SetSite()
         selectSite()
     }
@@ -75,17 +75,17 @@ class ViewController: UIViewController {
     
     
 
-    func tappedSite(sender: UIButton) {
+    func tappedSite(_ sender: UIButton) {
         let object = self.sites[sender.tag]
-        self.performSegueWithIdentifier("HomeSelection", sender: object)
+        self.performSegue(withIdentifier: "HomeSelection", sender: object)
     }
 
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         let webSite = sender as! WebSite
         if segue.identifier == "HomeSelection"{
-            let vc = segue.destinationViewController as! HomeSelectionController
+            let vc = segue.destination as! HomeSelectionController
             vc.selectedSite = webSite.Name
             vc.baseURL = webSite.HomeURL
         }
@@ -99,7 +99,7 @@ class ViewController: UIViewController {
     
     
     
-    func calculatePositionSite(index: Int, image: UIImage) -> CGRect
+    func calculatePositionSite(_ index: Int, image: UIImage) -> CGRect
     {
         //        let numImagePerRow = Int(bounds.width) / (Int(image.size.width) + 20)
         let numImagePerRow = Int(bounds.width) / (Int(300) + 25)
@@ -109,46 +109,46 @@ class ViewController: UIViewController {
         let height = CGFloat(120)
         let x = (index % numImagePerRow) * Int(width) + 20 * (index % numImagePerRow + 1)
         let y = index / numImagePerRow * Int(height) + 20 * (index / numImagePerRow + 1)
-        return CGRectMake(CGFloat(x), CGFloat(y), width, height)
+        return CGRect(x: CGFloat(x), y: CGFloat(y), width: width, height: height)
     }
     
     
-    func chargeSiteImageAsync(image: String, index: Int, name: String){
-        let url = NSURL(string: image)
+    func chargeSiteImageAsync(_ image: String, index: Int, name: String){
+        let url = URL(string: image)
         if(( (url == nil || (url?.hashValue) == nil) || name == "PornMD")){
             var image = UIImage(named: "ImageNotfound.png")
             if(name == "PornMD")
             {
                 image = UIImage(named: "PornMD.png")!
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 self.createSiteButton(image!,index: index,name: name)
             }
         }else{
-            let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+            let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
                 let image = UIImage(data: data!)
-                dispatch_async(dispatch_get_main_queue()){
+                DispatchQueue.main.async{
                     self.createSiteButton(image!,index: index,name: name)
                 }
-            }
+            }) 
             task.resume()
         }
     }
     
     
-    func createSiteButton(image: UIImage, index: Int,name: String){
-        let button = UIButton(type: UIButtonType.System)
-        button.contentVerticalAlignment = UIControlContentVerticalAlignment.Bottom
-        button.titleLabel?.lineBreakMode = .ByTruncatingTail
+    func createSiteButton(_ image: UIImage, index: Int,name: String){
+        let button = UIButton(type: UIButtonType.system)
+        button.contentVerticalAlignment = UIControlContentVerticalAlignment.bottom
+        button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.titleLabel?.backgroundColor = UIColor(red: 238.0/255.0, green: 238.0/255.0, blue: 238.0/255.0, alpha: 1.0)
-        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), forState: .Normal)
+        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), for: UIControlState())
         button.titleLabel?.font = UIFont(name: "Arial", size: 25)
-        button.setTitle(name, forState: .Normal)
-        button.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+        button.setTitle(name, for: UIControlState())
+        button.imageView?.contentMode = UIViewContentMode.scaleAspectFit
         button.frame =  calculatePositionSite(index, image: image)
-        button.setBackgroundImage(image, forState: .Normal)
+        button.setBackgroundImage(image, for: UIControlState())
         button.tag = index
-        button.addTarget(self, action: #selector(ViewController.tappedSite(_:)), forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: #selector(ViewController.tappedSite(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         scroll.addSubview(button)
         scroll.clipsToBounds = true

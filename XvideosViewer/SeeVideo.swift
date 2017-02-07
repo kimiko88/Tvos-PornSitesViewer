@@ -16,21 +16,21 @@ class AVVideoPlayerController: AVPlayerViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let url = NSURL(string:  String(htmlEncodedString: downloadVideo.Link))
-        player = AVPlayer(URL: url!)
+        let url = URL(string:  String(htmlEncodedString: downloadVideo.Link))
+        player = AVPlayer(url: url!)
         player?.play()
-        NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(AVVideoPlayerController.tick), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(AVVideoPlayerController.tick), userInfo: nil, repeats: true)
         
     }
     
     
     
     func tick() {//Failed case
-        if(player!.status == .Failed)
+        if(player!.status == .failed)
         {
-            let url = NSURL(string:  String(htmlEncodedString: downloadVideo.Link))
-            let item = AVPlayerItem(URL: url!)
-            player?.replaceCurrentItemWithPlayerItem(item)
+            let url = URL(string:  String(htmlEncodedString: downloadVideo.Link))
+            let item = AVPlayerItem(url: url!)
+            player?.replaceCurrentItem(with: item)
         }
     }
 }
@@ -38,11 +38,8 @@ class AVVideoPlayerController: AVPlayerViewController{
 
 extension String {
     init(htmlEncodedString: String) {
-        let encodedData = htmlEncodedString.dataUsingEncoding(NSUTF8StringEncoding)!
-        let attributedOptions : [String: AnyObject] = [
-            NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-            NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
-        ]
+        let encodedData = htmlEncodedString.data(using: String.Encoding.utf8)!
+        let attributedOptions: [ String: AnyObject ] = [ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject, NSCharacterEncodingDocumentAttribute: NSNumber(value: String.Encoding.utf8.rawValue) as AnyObject ]
         var attributedString = NSAttributedString()
         do{
             attributedString = try NSAttributedString(data: encodedData, options: attributedOptions, documentAttributes: nil)
@@ -50,6 +47,6 @@ extension String {
         }catch{
             print("error")
         }
-        self.init(attributedString.string)
+        self.init(attributedString.string)!
     }
 }

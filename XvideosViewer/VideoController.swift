@@ -20,7 +20,7 @@ class DownloadLink{
 
 class VideoController: UIViewController {
     
-    var bounds = UIScreen.mainScreen().bounds
+    var bounds = UIScreen.main.bounds
     var video: Video!
     var webSiteTitle: String = ""
     
@@ -101,28 +101,28 @@ class VideoController: UIViewController {
     }
     
     func YouPornVideo(){
-        let url = NSURL(string: self.video.Link)
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let url = URL(string: self.video.Link)
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             let strin = String(stringa)
             let splitted = strin.characters.split{$0 == " "}.map(String.init)
             for var i in 0 ..< splitted.count
             {
                 let oo = splitted[i]
                 
-                if (oo.rangeOfString("downloadOption") != nil){
+                if (oo.range(of: "downloadOption") != nil){
                     var tempLink = ""
                     var tempTitle = ""
                     var start = false
                     i += 1
-                    while((splitted[i].rangeOfString("/a>")) == nil)
+                    while((splitted[i].range(of: "/a>")) == nil)
                     {
                         i += 1
-                        if(splitted[i].rangeOfString("href=") != nil){
+                        if(splitted[i].range(of: "href=") != nil){
                             tempLink = splitted[i]
                         }
                         
-                        if(splitted[i].rangeOfString("\'>") != nil && tempLink.characters.count > 2){
+                        if(splitted[i].range(of: "\'>") != nil && tempLink.characters.count > 2){
                             start = true
                         }
                         if(start)
@@ -131,41 +131,41 @@ class VideoController: UIViewController {
                         }
                         
                     }
-                    let link = tempLink.stringByReplacingOccurrencesOfString("href='", withString: "")
-                    let title = tempTitle.stringByReplacingOccurrencesOfString(" Video'>", withString: "").stringByReplacingOccurrencesOfString("</a>\n<span", withString: "")
+                    let link = tempLink.replacingOccurrences(of: "href='", with: "")
+                    let title = tempTitle.replacingOccurrences(of: " Video'>", with: "").replacingOccurrences(of: "</a>\n<span", with: "")
                     self.downloadLinks.append(DownloadLink(link: link, title: title))
                 }
             }
             
             
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 0
                 
                 for downloadLink in self.downloadLinks{
-                    if(downloadLink.Title.rangeOfString("3GP") == nil)//AVPlayer for tvos can't play 3GP file
+                    if(downloadLink.Title.range(of: "3GP") == nil)//AVPlayer for tvos can't play 3GP file
                     {
                         self.createButton(downloadLink,index: i)
                     }
                     i += 1;
                 }
             }
-        }
+        }) 
         task.resume()
     }
     
     func XvideosVideo(){
-        let url = NSURL(string: self.video.Link)
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let url = URL(string: self.video.Link)
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             do {
-                let regex = try NSRegularExpression(pattern: "http://(\\w[^\"|^\']+/videos/\\w[^\"|^\']+)", options: NSRegularExpressionOptions.CaseInsensitive)
+                let regex = try NSRegularExpression(pattern: "http://(\\w[^\"|^\']+/videos/\\w[^\"|^\']+)", options: NSRegularExpression.Options.caseInsensitive)
                 let range = NSMakeRange(0, stringa.length)
-                let matches = regex.matchesInString(stringa as String, options: NSMatchingOptions.WithoutAnchoringBounds, range: range)
+                let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
-                    let result = stringa.substringWithRange(match.range)
-                    if(result.rangeOfString("mp4") != nil){
+                    let result = stringa.substring(with: match.range)
+                    if(result.range(of: "mp4") != nil){
                         var title = "mp4 quality"
-                        if(result.rangeOfString("3gp") != nil)
+                        if(result.range(of: "3gp") != nil)
                         {
                             title = "3gp quality"
                         }
@@ -176,35 +176,35 @@ class VideoController: UIViewController {
             }catch{
                 print("error");
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 0
                 
                 for downloadLink in self.downloadLinks{
-                    if(downloadLink.Title.rangeOfString("3GP") == nil)//AVPlayer for tvos can't play 3GP file
+                    if(downloadLink.Title.range(of: "3GP") == nil)//AVPlayer for tvos can't play 3GP file
                     {
                         self.createButton(downloadLink,index: i)
                     }
                     i += 1;
                 }
             }
-        }
+        }) 
         task.resume()
     }
     
     func PornhubVideo(){
        
-        let url = NSURL(string: self.video.Link)
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let url = URL(string: self.video.Link)
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             do {
-                let regex = try NSRegularExpression(pattern: "player_quality_\\w+\\s+=\\s\'[^\']*\'", options: NSRegularExpressionOptions.CaseInsensitive)
+                let regex = try NSRegularExpression(pattern: "player_quality_\\w+\\s+=\\s\'[^\']*\'", options: NSRegularExpression.Options.caseInsensitive)
                 let range = NSMakeRange(0, stringa.length)
-                let matches = regex.matchesInString(stringa as String, options: NSMatchingOptions.WithoutAnchoringBounds, range: range)
+                let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
-                    let result = stringa.substringWithRange(match.range)
+                    let result = stringa.substring(with: match.range)
                     var spliettd = result.characters.split{$0 == " "}.map(String.init)
                     let title = spliettd[0]
-                    let link = spliettd[2].stringByReplacingOccurrencesOfString("'", withString: "")
+                    let link = spliettd[2].replacingOccurrences(of: "'", with: "")
                         print(result)
                         self.downloadLinks.append(DownloadLink(link: link, title: title))
                     }
@@ -212,7 +212,7 @@ class VideoController: UIViewController {
             }catch{
                 print("error");
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 0
                 
                 for downloadLink in self.downloadLinks{
@@ -223,31 +223,31 @@ class VideoController: UIViewController {
                     i += 1;
                 }
             }
-        }
+        }) 
         task.resume()
     }
     
     
     func RedTubeVideo(){
         
-        let url = NSURL(string: self.video.Link)
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let url = URL(string: self.video.Link)
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             do {
-                let regex = try NSRegularExpression(pattern: "\\{\"hd\"(.*?)\\}", options: NSRegularExpressionOptions.CaseInsensitive)
+                let regex = try NSRegularExpression(pattern: "\\{\"hd\"(.*?)\\}", options: NSRegularExpression.Options.caseInsensitive)
                 let range = NSMakeRange(0, stringa.length)
-                let matches = regex.matchesInString(stringa as String, options: NSMatchingOptions.WithoutAnchoringBounds, range: range)
+                let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
-                    let result = stringa.substringWithRange(match.range)
-                    let splitted = result.stringByReplacingOccurrencesOfString("{", withString: "").stringByReplacingOccurrencesOfString("}", withString: "").characters.split{$0 == ","}.map(String.init)
+                    let result = stringa.substring(with: match.range)
+                    let splitted = result.replacingOccurrences(of: "{", with: "").replacingOccurrences(of: "}", with: "").characters.split{$0 == ","}.map(String.init)
                     for split in splitted
                     {
                     let titlelink = split.characters.split{$0 == "\""}.map(String.init)
                         if(titlelink.count > 2)
                         {
-                        let title = titlelink[0].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("{", withString: "")
+                        let title = titlelink[0].replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "{", with: "")
                             print(title)
-                        let link = titlelink[2].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("\\", withString: "").stringByReplacingOccurrencesOfString("}", withString: "")
+                        let link = titlelink[2].replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "}", with: "")
                     self.downloadLinks.append(DownloadLink(link: link, title: title))
                         }
                     }
@@ -256,7 +256,7 @@ class VideoController: UIViewController {
             }catch{
                 print("error");
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 0
                 
                 for downloadLink in self.downloadLinks{
@@ -267,29 +267,29 @@ class VideoController: UIViewController {
                     i += 1;
                 }
             }
-        }
+        }) 
         task.resume()
     }
     
     
     func Tube8Video(){
         
-        let url = NSURL(string: self.video.Link)
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let url = URL(string: self.video.Link)
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             do {
-                let regex = try NSRegularExpression(pattern: "quality_\\w\\w\\w\\w\":\"[^\"]*\"", options: NSRegularExpressionOptions.CaseInsensitive)
+                let regex = try NSRegularExpression(pattern: "quality_\\w\\w\\w\\w\":\"[^\"]*\"", options: NSRegularExpression.Options.caseInsensitive)
                 let range = NSMakeRange(0, stringa.length)
-                let matches = regex.matchesInString(stringa as String, options: NSMatchingOptions.WithoutAnchoringBounds, range: range)
+                let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
-                    let result = stringa.substringWithRange(match.range)
+                    let result = stringa.substring(with: match.range)
                     let splitted = result.characters.split{$0 == "\""}.map(String.init)
                     print(splitted)
                         if(splitted.count > 2 && splitted[2].characters.count > 10)
                         {
-                            let title = splitted[0].stringByReplacingOccurrencesOfString("\"", withString: "")
+                            let title = splitted[0].replacingOccurrences(of: "\"", with: "")
                             print(title)
-                            let link = splitted[2].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("\\", withString: "")
+                            let link = splitted[2].replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "\\", with: "")
                             self.downloadLinks.append(DownloadLink(link: link, title: title))
                         }
                 }
@@ -297,7 +297,7 @@ class VideoController: UIViewController {
             }catch{
                 print("error");
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 0
                 
                 for downloadLink in self.downloadLinks{
@@ -308,23 +308,23 @@ class VideoController: UIViewController {
                     i += 1;
                 }
             }
-        }
+        }) 
         task.resume()
     }
     
     
     func  ThumbzillaVideo(){
-        let url = NSURL(string: self.video.Link)
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let url = URL(string: self.video.Link)
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             do {
-                let regex = try NSRegularExpression(pattern: "data-quality=\"[^\"]*\">(\\w+)<", options: NSRegularExpressionOptions.CaseInsensitive)
+                let regex = try NSRegularExpression(pattern: "data-quality=\"[^\"]*\">(\\w+)<", options: NSRegularExpression.Options.caseInsensitive)
                 let range = NSMakeRange(0, stringa.length)
-                let matches = regex.matchesInString(stringa as String, options: NSMatchingOptions.WithoutAnchoringBounds, range: range)
+                let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
-                    let result = stringa.substringWithRange(match.range)
-                    let link = Utils.GetStringsByRegularExpression(result, regularexp: "\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("//", withString: "http://")
-                    let title = Utils.GetStringsByRegularExpression(result, regularexp: ">(\\w*)<")[0].stringByReplacingOccurrencesOfString(">", withString: "").stringByReplacingOccurrencesOfString("<", withString: "")
+                    let result = stringa.substring(with: match.range)
+                    let link = Utils.GetStringsByRegularExpression(result as NSString, regularexp: "\"[^\"]*\"")[0].replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "//", with: "http://")
+                    let title = Utils.GetStringsByRegularExpression(result as NSString, regularexp: ">(\\w*)<")[0].replacingOccurrences(of: ">", with: "").replacingOccurrences(of: "<", with: "")
                     print(link)
                     if( link.characters.count > 10)
                     {
@@ -335,7 +335,7 @@ class VideoController: UIViewController {
             }catch{
                 print("error");
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 0
                 
                 for downloadLink in self.downloadLinks{
@@ -346,25 +346,25 @@ class VideoController: UIViewController {
                     i += 1;
                 }
             }
-        }
+        }) 
         task.resume()
     }
     
     func  XTubeVideo(){
-        let url = NSURL(string: self.video.Link)
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let url = URL(string: self.video.Link)
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             do {
-                let regex = try NSRegularExpression(pattern: "quality_\\w\\w\\w\\w\":\"(.*?)\"", options: NSRegularExpressionOptions.CaseInsensitive)
+                let regex = try NSRegularExpression(pattern: "quality_\\w\\w\\w\\w\":\"(.*?)\"", options: NSRegularExpression.Options.caseInsensitive)
                 let range = NSMakeRange(0, stringa.length)
-                let matches = regex.matchesInString(stringa as String, options: NSMatchingOptions.WithoutAnchoringBounds, range: range)
+                let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
-                    let result = stringa.substringWithRange(match.range)
+                    let result = stringa.substring(with: match.range)
                     let splitted = result.characters.split{$0 == "\""}.map(String.init)
-if(splitted.count > 2)
-{
+                if(splitted.count > 2)
+                {
                     let title = splitted[0]
-                    let link = splitted[2].stringByRemovingPercentEncoding!
+                    let link = splitted[2].removingPercentEncoding!
                         self.downloadLinks.append(DownloadLink(link: link, title: title))
                     }
                 }
@@ -372,7 +372,7 @@ if(splitted.count > 2)
             }catch{
                 print("error");
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 0
                 
                 for downloadLink in self.downloadLinks{
@@ -383,7 +383,7 @@ if(splitted.count > 2)
                     i += 1;
                 }
             }
-        }
+        }) 
         task.resume()
     }
     
@@ -422,33 +422,33 @@ if(splitted.count > 2)
 //        task.resume()
 //    }
     
-    func tapped(sender: UIButton) {
+    func tapped(_ sender: UIButton) {
         let object = self.downloadLinks[sender.tag]
-        self.performSegueWithIdentifier("SeeVideo", sender: object)
+        self.performSegue(withIdentifier: "SeeVideo", sender: object)
     }
     
     
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         let video = sender as! DownloadLink
         if segue.identifier == "SeeVideo"{
-            let vc = segue.destinationViewController as! AVVideoPlayerController
+            let vc = segue.destination as! AVVideoPlayerController
             vc.downloadVideo = video
         }
     }
     
-    func createButton(download: DownloadLink, index: Int){
+    func createButton(_ download: DownloadLink, index: Int){
         let numImagePerRow = Int(bounds.width) / (Int(1600) + 20)
         let width = CGFloat(1600)
         let height = CGFloat(180)
         let x = (index % numImagePerRow) * Int(width) + 20 * (index % numImagePerRow)
         let y = index / numImagePerRow * Int(height) + 20 * (index / numImagePerRow)
-        let button = UIButton(type: UIButtonType.System)
-        button.frame =  CGRectMake(CGFloat(x), CGFloat(y), width, height)
-        button.setTitle(download.Title, forState: .Normal)
+        let button = UIButton(type: UIButtonType.system)
+        button.frame =  CGRect(x: CGFloat(x), y: CGFloat(y), width: width, height: height)
+        button.setTitle(download.Title, for: UIControlState())
         button.tag = index
-        button.addTarget(self, action: #selector(VideoController.tapped(_:)), forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: #selector(VideoController.tapped(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         self.view.addSubview(button)
         self.view.clipsToBounds = true

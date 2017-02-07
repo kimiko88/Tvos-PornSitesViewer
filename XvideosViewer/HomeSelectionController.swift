@@ -42,24 +42,24 @@ class HomeSelectionController: UIViewController {
     
     var videos = [Video]()
     var actualPage = 0;
-    var bounds = UIScreen.mainScreen().bounds
+    var bounds = UIScreen.main.bounds
     var scroll = UIScrollView()
     var field = UITextField()
     var isSearch: Bool = false
     var isSorted: Bool = false
     var selectedSort: String = "rating"
     var selectedSite: String = ""
-    var baseURL = NSURL()
+    var baseURL: URL!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view = self.scroll;
-        self.scroll.backgroundColor = UIColor.blackColor()
+        self.scroll.backgroundColor = UIColor.black
         showPage(actualPage)
     }
     
     
-    func showPage(actualPage: Int){
+    func showPage(_ actualPage: Int){
         videos = [Video]()
         self.isSearch = false
         let subViews = self.scroll.subviews
@@ -68,7 +68,7 @@ class HomeSelectionController: UIViewController {
         }
         if(selectedSite == "YouPorn")
         {
-            let url = NSURL(string: "http://www.youporn.com/?page=\(actualPage)")!
+            let url = URL(string: "http://www.youporn.com/?page=\(actualPage)")!
             YouPornCharge(url)
         }
         if(selectedSite == "Xvideos")
@@ -78,7 +78,7 @@ class HomeSelectionController: UIViewController {
             {
                 tempurl = "http://www.xvideos.com/new/\(actualPage)"
             }
-               let url = NSURL(string:tempurl)!
+               let url = URL(string:tempurl)!
             XvideosCharge(url)
         }
         if(selectedSite == "Pornhub")
@@ -88,7 +88,7 @@ class HomeSelectionController: UIViewController {
             {
                 tempurl = "http://www.pornhub.com/video?page=\(actualPage)"
             }
-             let url = NSURL(string:tempurl)!
+             let url = URL(string:tempurl)!
             PornhubCharge(url)
         }
         if(selectedSite == "RedTube")
@@ -98,7 +98,7 @@ class HomeSelectionController: UIViewController {
             {
                 tempurl = "http://www.redtube.com?page=\(actualPage)"
             }
-            let url = NSURL(string:tempurl)!
+            let url = URL(string:tempurl)!
             RedTubeCharge(url)
         }
         if(selectedSite == "Tube8")
@@ -108,14 +108,14 @@ class HomeSelectionController: UIViewController {
             {
                 tempurl = "http://www.tube8.com/latest/page/\(actualPage)/"
             }
-            let url = NSURL(string:tempurl)!
+            let url = URL(string:tempurl)!
             Tube8Charge(url)
         }
         if(selectedSite == "PornMD")
         {
             let tempurl = "http://www.pornmd.com"
             
-            let url = NSURL(string: tempurl)!
+            let url = URL(string: tempurl)!
             PornMDCharge(url)
         }
         if(selectedSite == "Thumbzilla")
@@ -125,7 +125,7 @@ class HomeSelectionController: UIViewController {
             {
                 tempurl = "http://www.thumbzilla.com/?page=\(actualPage + 1)"
             }
-            let url = NSURL(string:tempurl)!
+            let url = URL(string:tempurl)!
             ThumbzillaCharge(url)
         }
         if(selectedSite == "XTube")
@@ -135,8 +135,8 @@ class HomeSelectionController: UIViewController {
             {
                 tempurl = "http://www.xtube.com/video/\(actualPage + 1)"
             }
-            let url = NSURL(string:tempurl)!
-            ThumbzillaCharge(url)
+            let url = URL(string:tempurl)!
+            XTubeCharge(url)
         }
 //        if(selectedSite == "YouJizz")
 //        {
@@ -151,39 +151,39 @@ class HomeSelectionController: UIViewController {
 
     }
     
-    func YouPornCharge(url: NSURL) {
+    func YouPornCharge(_ url: URL) {
 //             let url = NSURL(string: "http://www.youporn.com/?page=\(actualPage)")!
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             let strin = String(stringa)
             let splitted = strin.characters.split{$0 == " "}.map(String.init)
             
             for var i in 0 ..< splitted.count
             {
                 let oo = splitted[i]
-                if (oo.rangeOfString("href=\"/watch/") != nil && splitted[i + 1].rangeOfString("class='video-box-image'") != nil){
-                    let link = oo.stringByReplacingOccurrencesOfString("href=\"",withString: "http://www.youporn.com").stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("\">", withString: "")
+                if (oo.range(of: "href=\"/watch/") != nil && splitted[i + 1].range(of: "class='video-box-image'") != nil){
+                    let link = oo.replacingOccurrences(of: "href=\"",with: "http://www.youporn.com").replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "\">", with: "")
                     var tempTitle = ""
                     var start = false
                     i += 1
-                    while((splitted[i].rangeOfString("\n")) == nil)
+                    while((splitted[i].range(of: "\n")) == nil)
                     {
                         i += 1
-                        if(splitted[i].rangeOfString("title=\"") != nil){
+                        if(splitted[i].range(of: "title=\"") != nil){
                             start = true
                         }
                         if(start){
                             tempTitle += " " + splitted[i]
                         }
                     }
-                    let title = tempTitle.stringByReplacingOccurrencesOfString(" title=\"", withString: "").stringByReplacingOccurrencesOfString("\">\n<img", withString: "").stringByRemovingPercentEncoding
-                    let img = splitted[i+1].stringByReplacingOccurrencesOfString("src=\"", withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
+                    let title = tempTitle.replacingOccurrences(of: " title=\"", with: "").replacingOccurrences(of: "\">\n<img", with: "").removingPercentEncoding
+                    let img = splitted[i+1].replacingOccurrences(of: "src=\"", with: "").replacingOccurrences(of: "\"", with: "")
                     print(img)
                     let video = Video(link: link, imageLink: img, title: title!)
                     self.videos.append(video)
                 }
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                 self.TextField(i)
                 i += 3
@@ -204,24 +204,24 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
 
     }
     
-    func XvideosCharge(url: NSURL){
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+    func XvideosCharge(_ url: URL){
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "<img\\s+(?:[^>]*?\\s+)?src=\"http://img\\-([^\"]*)\"")
-            var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\s+(?:[^>]*?\\s+)?href=\"/video([^\"]*)\"?\\stitle=\"([^\"]*)\"")
+            var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\s+href=\"/video([^\"]*)\"?\\stitle=\"([^\"]*)\"")
             if(imageLink.count == titleAndHref.count)
             {
                 for i in 0 ..< titleAndHref.count
                 {
-                    let imglinkTemp = imageLink[i].stringByReplacingOccurrencesOfString("<img src=",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let href = titleAndHref[i].stringByReplacingOccurrencesOfString("<a ",withString: "").stringByReplacingOccurrencesOfString("href=\"",withString: "http://www.xvideos.com").characters.split{$0 == "\""}.map(String.init)
+                    let imglinkTemp = imageLink[i].replacingOccurrences(of: "<img src=",with: "").replacingOccurrences(of: "\"", with: "")
+                    let href = titleAndHref[i].replacingOccurrences(of: "<a ",with: "").replacingOccurrences(of: "href=\"",with: "http://www.xvideos.com").characters.split{$0 == "\""}.map(String.init)
                     let video = Video(link: href[0], imageLink: imglinkTemp, title: href[2])
                     self.videos.append(video)
                 }
@@ -229,7 +229,7 @@ class HomeSelectionController: UIViewController {
             else{
                 //refresh button
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                 self.TextField(i)
                 i += 3
@@ -250,18 +250,18 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
     }
     
-    func PornhubCharge(url: NSURL){
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!.stringByReplacingOccurrencesOfString("\n", withString: "").stringByReplacingOccurrencesOfString("\t", withString: "")
-            var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp:
-                "<img\\s+(?:[^>]*?\\s+)?data-end")//"<img\\s+(?:[^>]*?\\s+)?src=\"http://([^\"]*)?([^<]*)"
-            var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp:
+    func PornhubCharge(_ url: URL){
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!.replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: "\t", with: "")
+            var imageLink = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
+                "<imgsrc=\"([^\"]*)\".*?data-end=\"*\"[^>]*>")
+            var titleAndHref = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
                 "class=\"phimage\">(\\s*)<a\\s+(?:[^>]*?\\s+)?href=\"/view_video.php?([^\"]*)\"?\\stitle=\"([^\"]*)\"")
             print(imageLink.count)
             print(titleAndHref.count)
@@ -269,9 +269,9 @@ class HomeSelectionController: UIViewController {
             {
                 for i in 0 ..< titleAndHref.count
                 {
-                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i],regularexp: "data-smallthumb=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("data-smallthumb=\"", withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "href=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("href=\"",withString: "http://www.pornhub.com").stringByReplacingOccurrencesOfString("\"", withString: "")
-                          let title = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "title=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("title=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "").stringByRemovingPercentEncoding
+                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString,regularexp: "data-smallthumb=\"[^\"]*\"")[0].replacingOccurrences(of: "data-smallthumb=\"", with: "").replacingOccurrences(of: "\"", with: "")
+                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "href=\"[^\"]*\"")[0].replacingOccurrences(of: "href=\"",with: "http://www.pornhub.com").replacingOccurrences(of: "\"", with: "")
+                          let title = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "title=\"[^\"]*\"")[0].replacingOccurrences(of: "title=\"",with: "").replacingOccurrences(of: "\"", with: "").removingPercentEncoding
                     let video = Video(link: href, imageLink: imglinkTemp, title: title!)
                     self.videos.append(video)
                 }
@@ -279,7 +279,7 @@ class HomeSelectionController: UIViewController {
             else{
                 //refresh button
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                 self.TextField(i)
                 i += 3
@@ -300,16 +300,16 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
     }
     
     
-    func RedTubeCharge(url: NSURL){
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+    func RedTubeCharge(_ url: URL){
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "span>(\\s*)<img\\s+(?:[^>]*?\\s+)?src=\"?([^\"]*)\"?\\s")
             var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\s+(?:[^>]*?\\s+)?class=\"video-thumb([^\"]*)\"?")
             print(imageLink)
@@ -320,9 +320,9 @@ class HomeSelectionController: UIViewController {
             {
                 for i in 0 ..< titleAndHref.count
                 {
-                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i], regularexp: "data-src=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("data-src=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "href=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("href=\"",withString: "http://www.redtube.com").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "title=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("title=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "").stringByRemovingPercentEncoding
+                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString, regularexp: "data-src=\"[^\"]*\"")[0].replacingOccurrences(of: "data-src=\"",with: "").replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "//", with: "http://")
+                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "href=\"[^\"]*\"")[0].replacingOccurrences(of: "href=\"",with: "http://www.redtube.com").replacingOccurrences(of: "\"", with: "")
+                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "title=\"[^\"]*\"")[0].replacingOccurrences(of: "title=\"",with: "").replacingOccurrences(of: "\"", with: "").removingPercentEncoding
                     let video = Video(link: href, imageLink: imglinkTemp, title: title!)
                     self.videos.append(video)
                 }
@@ -330,7 +330,7 @@ class HomeSelectionController: UIViewController {
             else{
                 //refresh button
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                 self.TextField(i)
                 i += 3
@@ -351,16 +351,16 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
     }
     
     
-    func Tube8Charge(url: NSURL){
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+    func Tube8Charge(_ url: URL){
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "class=\"videoThumbs\"\\s+(?:[^>]*?\\s+)?src=\"?([^\"]*)\"?")
             var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "video_title\">(\\s*)<a\\s+(?:[^>]*?\\s+)?href=\"?([^\"]*)\"?\\stitle=\"?([^\"]*)\"?")
             print(imageLink)
@@ -371,9 +371,9 @@ class HomeSelectionController: UIViewController {
             {
                 for i in 0 ..< titleAndHref.count
                 {
-                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i], regularexp: "src=\"?([^\"]*)\"?")[0].stringByReplacingOccurrencesOfString("src=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "href=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("href=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "title=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("title=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "").stringByRemovingPercentEncoding
+                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString, regularexp: "src=\"?([^\"]*)\"?")[0].replacingOccurrences(of: "src=\"",with: "").replacingOccurrences(of: "\"", with: "")
+                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "href=\"[^\"]*\"")[0].replacingOccurrences(of: "href=\"",with: "").replacingOccurrences(of: "\"", with: "")
+                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "title=\"[^\"]*\"")[0].replacingOccurrences(of: "title=\"",with: "").replacingOccurrences(of: "\"", with: "").removingPercentEncoding
                     let video = Video(link: href, imageLink: imglinkTemp, title: title!)
                     self.videos.append(video)
                 }
@@ -381,7 +381,7 @@ class HomeSelectionController: UIViewController {
             else{
                 //refresh button
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                 self.TextField(i)
                 i += 3
@@ -402,16 +402,16 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
     }
     
     
-    func ThumbzillaCharge(url: NSURL){
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+    func ThumbzillaCharge(_ url: URL){
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
         
             let imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "data-original=\"?([^\"]*)\"?")
             var href = Utils.GetStringsByRegularExpression(stringa, regularexp: "js-thumb\"\\shref=\"[^\"]*\"")
@@ -423,9 +423,9 @@ class HomeSelectionController: UIViewController {
             {
                 for i in 0 ..< href.count
                 {
-                    let imglinkTemp = uniqueimage[i].stringByReplacingOccurrencesOfString("data-original=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString("//", withString: "http://")
-                    let href = Utils.GetStringsByRegularExpression(href[i], regularexp: "href=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("href=\"",withString: "http://www.thumbzilla.com").stringByReplacingOccurrencesOfString("\"", withString: "").stringByReplacingOccurrencesOfString(">", withString: ">")
-                    let title = Utils.GetStringsByRegularExpression(title[i], regularexp: ">(.*?)<")[0].stringByReplacingOccurrencesOfString("title=\"",withString: "").stringByReplacingOccurrencesOfString("<", withString: "").stringByReplacingOccurrencesOfString(">", withString: "").stringByRemovingPercentEncoding
+                    let imglinkTemp = uniqueimage[i].replacingOccurrences(of: "data-original=\"",with: "").replacingOccurrences(of: "\"", with: "")
+                    let href = Utils.GetStringsByRegularExpression(href[i] as NSString, regularexp: "href=\"[^\"]*\"")[0].replacingOccurrences(of: "href=\"",with: "http://www.thumbzilla.com").replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: ">", with: ">")
+                    let title = Utils.GetStringsByRegularExpression(title[i] as NSString, regularexp: ">(.*?)<")[0].replacingOccurrences(of: "title=\"",with: "").replacingOccurrences(of: "<", with: "").replacingOccurrences(of: ">", with: "").removingPercentEncoding
                     let video = Video(link: href, imageLink: imglinkTemp, title: title!)
                     self.videos.append(video)
                 }
@@ -433,7 +433,7 @@ class HomeSelectionController: UIViewController {
             else{
                 //refresh button
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                 self.TextField(i)
                 i += 3
@@ -454,16 +454,16 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
     }
     
     
-    func XTubeCharge(url: NSURL){
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+    func XTubeCharge(_ url: URL){
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "video\"(\\s*)>(\\s*)<(.*?)>")
             var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\shref=\"/video-watch(.*?)>")
             print(imageLink)
@@ -474,13 +474,13 @@ class HomeSelectionController: UIViewController {
             {
                 for i in 0 ..< titleAndHref.count
                 {
-                      var imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i], regularexp: "src=\"?([^\"]*)\"?")[0].stringByReplacingOccurrencesOfString("src=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    if(imageLink[i].containsString("placeholder"))
+                      var imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString, regularexp: "src=\"?([^\"]*)\"?")[0].replacingOccurrences(of: "src=\"",with: "").replacingOccurrences(of: "\"", with: "")
+                    if(imageLink[i].contains("placeholder"))
                     {
-                       imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i], regularexp: "data-lazySrc=\"?([^\"]*)\"?")[0].stringByReplacingOccurrencesOfString("data-lazySrc=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
+                       imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString, regularexp: "data-lazySrc=\"?([^\"]*)\"?")[0].replacingOccurrences(of: "data-lazySrc=\"",with: "").replacingOccurrences(of: "\"", with: "")
                     }
-                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "href=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("href=\"",withString: "http://www.xtube.com").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "title=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("title=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "").stringByRemovingPercentEncoding
+                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "href=\"[^\"]*\"")[0].replacingOccurrences(of: "href=\"",with: "http://www.xtube.com").replacingOccurrences(of: "\"", with: "")
+                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "title=\"[^\"]*\"")[0].replacingOccurrences(of: "title=\"",with: "").replacingOccurrences(of: "\"", with: "").removingPercentEncoding
                     let video = Video(link: href, imageLink: imglinkTemp, title: title!)
                     self.videos.append(video)
                 }
@@ -488,7 +488,7 @@ class HomeSelectionController: UIViewController {
             else{
                 //refresh button
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
 //                self.TextField(i)
                 i += 3
@@ -509,15 +509,15 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
     }
-    func PornMDCharge(url: NSURL){
-        if(url == NSURL(string: "http://www.pornmd.com"))
+    func PornMDCharge(_ url: URL){
+        if(url == URL(string: "http://www.pornmd.com"))
         {
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                                 self.TextField(i)
                 i += 3
@@ -538,11 +538,11 @@ class HomeSelectionController: UIViewController {
 //                i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
         }else{
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            let stringa = NSString(data: data!, encoding: NSUTF8StringEncoding)!
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+            let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "video\"(\\s*)>(\\s*)<(.*?)>")
             var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\shref=\"/video-watch(.*?)>")
             print(imageLink)
@@ -553,13 +553,13 @@ class HomeSelectionController: UIViewController {
             {
                 for i in 0 ..< titleAndHref.count
                 {
-                    var imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i], regularexp: "src=\"?([^\"]*)\"?")[0].stringByReplacingOccurrencesOfString("src=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    if(imageLink[i].containsString("placeholder"))
+                    var imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString, regularexp: "src=\"?([^\"]*)\"?")[0].replacingOccurrences(of: "src=\"",with: "").replacingOccurrences(of: "\"", with: "")
+                    if(imageLink[i].contains("placeholder"))
                     {
-                        imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i], regularexp: "data-lazySrc=\"?([^\"]*)\"?")[0].stringByReplacingOccurrencesOfString("data-lazySrc=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "")
+                        imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString, regularexp: "data-lazySrc=\"?([^\"]*)\"?")[0].replacingOccurrences(of: "data-lazySrc=\"",with: "").replacingOccurrences(of: "\"", with: "")
                     }
-                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "href=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("href=\"",withString: "http://www.xtube.com").stringByReplacingOccurrencesOfString("\"", withString: "")
-                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i], regularexp: "title=\"[^\"]*\"")[0].stringByReplacingOccurrencesOfString("title=\"",withString: "").stringByReplacingOccurrencesOfString("\"", withString: "").stringByRemovingPercentEncoding
+                    let href = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "href=\"[^\"]*\"")[0].replacingOccurrences(of: "href=\"",with: "http://www.xtube.com").replacingOccurrences(of: "\"", with: "")
+                    let title = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "title=\"[^\"]*\"")[0].replacingOccurrences(of: "title=\"",with: "").replacingOccurrences(of: "\"", with: "").removingPercentEncoding
                     let video = Video(link: href, imageLink: imglinkTemp, title: title!)
                     self.videos.append(video)
                 }
@@ -567,7 +567,7 @@ class HomeSelectionController: UIViewController {
             else{
                 //refresh button
             }
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 var i = 1;
                 //                self.TextField(i)
                 i += 3
@@ -588,9 +588,9 @@ class HomeSelectionController: UIViewController {
                 i += 1
                 
                 self.scroll.contentSize = CGSize(width: self.bounds.width, height: CGFloat(self.calculatePosition(i).maxY + 180))
-                self.scroll.scrollEnabled = true
+                self.scroll.isScrollEnabled = true
             }
-        }
+        }) 
         task.resume()
         }
     }
@@ -658,7 +658,7 @@ class HomeSelectionController: UIViewController {
 //    }
 
     
-    func searchText(textToSearch: String){
+    func searchText(_ textToSearch: String){
         videos = [Video]()
         let subViews = self.scroll.subviews
         for subview in subViews{
@@ -668,29 +668,29 @@ class HomeSelectionController: UIViewController {
         self.selectedSort = "relevance"
         if(selectedSite == "YouPorn")
         {
-                   let url = NSURL(string: "http://www.youporn.com/search/?query=\(textToSearch.stringByReplacingOccurrencesOfString(" ", withString: "+"))&page=\(actualPage + 1)")!
+                   let url = URL(string: "http://www.youporn.com/search/?query=\(textToSearch.replacingOccurrences(of: " ", with: "+"))&page=\(actualPage + 1)")!
             YouPornCharge(url)
         }
         if(selectedSite == "Xvideos")
         {
-              let url = NSURL(string: "http://www.xvideos.com/?k=\(textToSearch.stringByReplacingOccurrencesOfString(" ", withString: "+"))&p=\(actualPage)")!
+              let url = URL(string: "http://www.xvideos.com/?k=\(textToSearch.replacingOccurrences(of: " ", with: "+"))&p=\(actualPage)")!
             XvideosCharge(url)
         }
         if(selectedSite == "Pornhub")
         {
-            let tempurl = "http://www.pornhub.com/video/search?search=?query=\(textToSearch.stringByReplacingOccurrencesOfString(" ", withString: "+"))&page=\(actualPage + 1)"
-            let url = NSURL(string:tempurl)!
+            let tempurl = "http://www.pornhub.com/video/search?search=?query=\(textToSearch.replacingOccurrences(of: " ", with: "+"))&page=\(actualPage + 1)"
+            let url = URL(string:tempurl)!
             PornhubCharge(url)
         }
         if(selectedSite == "RedTube"){
-            let tempurl = "http://www.redtube.com/?search=\(textToSearch.stringByReplacingOccurrencesOfString(" ", withString: "+"))&page=\(actualPage + 1)"
-            let url = NSURL(string:tempurl)!
+            let tempurl = "http://www.redtube.com/?search=\(textToSearch.replacingOccurrences(of: " ", with: "+"))&page=\(actualPage + 1)"
+            let url = URL(string:tempurl)!
             RedTubeCharge(url)
         }
         if(selectedSite == "Tube8")
         {
-            let tempurl = "http://www.tube8.com/searches.html?q=\(textToSearch.stringByReplacingOccurrencesOfString(" ", withString: "+"))&page=\(actualPage + 1)"
-            let url = NSURL(string:tempurl)!
+            let tempurl = "http://www.tube8.com/searches.html?q=\(textToSearch.replacingOccurrences(of: " ", with: "+"))&page=\(actualPage + 1)"
+            let url = URL(string:tempurl)!
             Tube8Charge(url)
         }
 //        if(selectedSite == "PornMD")
@@ -699,8 +699,8 @@ class HomeSelectionController: UIViewController {
 //        }
         if(selectedSite == "Thumbzilla")
         {
-            let tempurl = "http://www.thumbzilla.com/video/search?q=\(textToSearch.stringByReplacingOccurrencesOfString(" ", withString: "+"))&page=\(actualPage + 1)"
-            let url = NSURL(string:tempurl)!
+            let tempurl = "http://www.thumbzilla.com/video/search?q=\(textToSearch.replacingOccurrences(of: " ", with: "+"))&page=\(actualPage + 1)"
+            let url = URL(string:tempurl)!
            ThumbzillaCharge(url)
         }
         
@@ -754,7 +754,7 @@ class HomeSelectionController: UIViewController {
 //        task.resume()
     }
     
-    func SortBySearch(howSort: String,textToSearch: String){
+    func SortBySearch(_ howSort: String,textToSearch: String){
         videos = [Video]()
         self.isSearch = true
         let subViews = self.scroll.subviews
@@ -763,43 +763,43 @@ class HomeSelectionController: UIViewController {
         }
     }
     
-    func TextField(index: Int)
+    func TextField(_ index: Int)
     {
         field.frame =  calculatePositionLarger(index)
-        field.backgroundColor = UIColor.whiteColor()
+        field.backgroundColor = UIColor.white
         scroll.addSubview(field)
         
     }
     
-    func searchButton(index: Int){
-        let button = UIButton(type: UIButtonType.System)
-        button.backgroundColor = UIColor.blackColor()
+    func searchButton(_ index: Int){
+        let button = UIButton(type: UIButtonType.system)
+        button.backgroundColor = UIColor.black
         button.frame =  calculatePosition(index)
-        button.setTitle("Search", forState: .Normal)
+        button.setTitle("Search", for: UIControlState())
         //        button.tag = index + 1)
-        button.addTarget(self, action: #selector(HomeSelectionController.search(_:)), forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: #selector(HomeSelectionController.search(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         scroll.addSubview(button)
     }
     
     
-    func homeButton(index: Int){
-        let button = UIButton(type: UIButtonType.System)
-        button.backgroundColor = UIColor.blackColor()
+    func homeButton(_ index: Int){
+        let button = UIButton(type: UIButtonType.system)
+        button.backgroundColor = UIColor.black
         button.frame =  calculatePosition(index)
-        button.setTitle("Home", forState: .Normal)
+        button.setTitle("Home", for: UIControlState())
         //        button.tag = index + 1)
-        button.addTarget(self, action: #selector(HomeSelectionController.home(_:)), forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: #selector(HomeSelectionController.home(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         scroll.addSubview(button)
     }
-    func nextButton(index: Int){
-        let button = UIButton(type: UIButtonType.System)
-        button.backgroundColor = UIColor.blackColor()
+    func nextButton(_ index: Int){
+        let button = UIButton(type: UIButtonType.system)
+        button.backgroundColor = UIColor.black
         button.frame =  calculatePosition(index)
-        button.setTitle("Next Page", forState: .Normal)
+        button.setTitle("Next Page", for: UIControlState())
         button.tag = index
-        button.addTarget(self, action: #selector(HomeSelectionController.next(_:)), forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: #selector(HomeSelectionController.next(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         scroll.addSubview(button)
         
@@ -807,19 +807,19 @@ class HomeSelectionController: UIViewController {
         //        scroll.scrollEnabled = true
     }
     
-    func sortButton(index: Int,text: Selector){
-        let button = UIButton(type: UIButtonType.System)
-        let title = text.description.stringByReplacingOccurrencesOfString(":", withString: "")
+    func sortButton(_ index: Int,text: Selector){
+        let button = UIButton(type: UIButtonType.system)
+        let title = text.description.replacingOccurrences(of: ":", with: "")
         if(selectedSort == title)
         {
-            button.backgroundColor = UIColor.grayColor()
+            button.backgroundColor = UIColor.gray
         }else{
-            button.backgroundColor = UIColor.blackColor()
+            button.backgroundColor = UIColor.black
         }
         button.frame =  calculatePosition(index)
-        button.setTitle(title,forState: .Normal)
+        button.setTitle(title,for: UIControlState())
         //        button.tag = index + 1)
-        button.addTarget(self, action: text, forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: text, for: .primaryActionTriggered)
         
         button.clipsToBounds = true
         scroll.addSubview(button)
@@ -827,24 +827,24 @@ class HomeSelectionController: UIViewController {
 
     
     
-    func previousButton(index: Int){
-        let button = UIButton(type: UIButtonType.System)
+    func previousButton(_ index: Int){
+        let button = UIButton(type: UIButtonType.system)
         button.frame =  calculatePosition(index)
-        button.setTitle("Previous Page", forState: .Normal)
+        button.setTitle("Previous Page", for: UIControlState())
         button.tag = index
-        button.addTarget(self, action: #selector(HomeSelectionController.previous(_:)), forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: #selector(HomeSelectionController.previous(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         scroll.addSubview(button)
         //        scroll.clipsToBounds = true
     }
     
-    func tapped(sender: UIButton) {
+    func tapped(_ sender: UIButton) {
         let object = self.videos[sender.tag]
-        self.performSegueWithIdentifier("Video", sender: object)
+        self.performSegue(withIdentifier: "Video", sender: object)
     }
     
 
-    func next(sender: UIButton) {
+    func next(_ sender: UIButton) {
         actualPage += 1
         //TODO ADD SORT PAGINATION
         if(!isSearch){
@@ -866,7 +866,7 @@ class HomeSelectionController: UIViewController {
     }
     
     
-    func previous(sender: UIButton) {
+    func previous(_ sender: UIButton) {
         actualPage -= 1
         if(!isSearch){
             if(!isSorted)
@@ -890,22 +890,22 @@ class HomeSelectionController: UIViewController {
         }
     }
     
-    func home(sender: UIButton){
+    func home(_ sender: UIButton){
         self.actualPage = 0
         self.showPage(actualPage)
     }
     
     
-    func search(sender: UIButton){
+    func search(_ sender: UIButton){
         self.actualPage = 0
         self.searchText(field.text!)
     }
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         let video = sender as! Video
         if segue.identifier == "Video"{
-            let vc = segue.destinationViewController as! VideoController
+            let vc = segue.destination as! VideoController
             vc.video = video
             vc.webSiteTitle = selectedSite
         }
@@ -917,82 +917,84 @@ class HomeSelectionController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func calculatePosition(index: Int) -> CGRect
+    func calculatePosition(_ index: Int) -> CGRect
     {
         let numImagePerRow = Int(bounds.width) / (Int(300) + 30)
         let width = CGFloat(300)
         let height =  CGFloat(169)
         let x = ((index) % numImagePerRow) * Int(width) + 20 * ((index) % numImagePerRow + 1)
         let y = (index) / numImagePerRow * Int(height) + 20 * ((index) / numImagePerRow + 1)
-        return CGRectMake(CGFloat(x), CGFloat(y), width, height)
+        return CGRect(x: CGFloat(x), y: CGFloat(y), width: width, height: height)
     }
     
-    func calculatePositionLarger(index: Int) -> CGRect
+    func calculatePositionLarger(_ index: Int) -> CGRect
     {
         let numImagePerRow = Int(bounds.width) / (Int(600) + 30)
         let width = CGFloat(600)
         let height =  CGFloat(169)
         let x = ((index) % numImagePerRow) * Int(width) + 20 * ((index) % numImagePerRow + 1)
         let y = (index) / numImagePerRow * Int(height) + 20 * ((index) / numImagePerRow + 1)
-        return CGRectMake(CGFloat(x), CGFloat(y), width, height)
+        return CGRect(x: CGFloat(x), y: CGFloat(y), width: width, height: height)
     }
     
-    func calculatePosition(index: Int, image: UIImage) -> CGRect
+    func calculatePosition(_ index: Int, image: UIImage) -> CGRect
     {
         let numImagePerRow = Int(bounds.width) / (Int(300) + 30)
         let width = CGFloat(300)
         let height = CGFloat(169)
         let x = (index % numImagePerRow) * Int(width) + 20 * (index % numImagePerRow + 1)
         let y = index / numImagePerRow * Int(height) + 20 * (index / numImagePerRow + 1)
-        return CGRectMake(CGFloat(x), CGFloat(y), width, height)
+        return CGRect(x: CGFloat(x), y: CGFloat(y), width: width, height: height)
     }
     
     
-    func calculatePositionSite(index: Int, image: UIImage) -> CGRect
+    func calculatePositionSite(_ index: Int, image: UIImage) -> CGRect
     {
         let numImagePerRow = Int(bounds.width) / (Int(300) + 30)
         let width = CGFloat(300)
         let height = CGFloat(120)
         let x = (index % numImagePerRow) * Int(width) + 20 * (index % numImagePerRow + 1)
         let y = index / numImagePerRow * Int(height) + 20 * (index / numImagePerRow + 1)
-        return CGRectMake(CGFloat(x), CGFloat(y), width, height)
+        return CGRect(x: CGFloat(x), y: CGFloat(y), width: width, height: height)
     }
     
     
-    func createButton(image: UIImage, index: Int,video: Video){
-        let button = UIButton(type: UIButtonType.System)
-        button.contentVerticalAlignment = UIControlContentVerticalAlignment.Bottom
-        button.titleLabel?.lineBreakMode = .ByTruncatingTail
+    func createButton(_ image: UIImage, index: Int,video: Video){
+        let button = UIButton(type: UIButtonType.system)
+        button.contentVerticalAlignment = UIControlContentVerticalAlignment.bottom
+        button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.titleLabel?.backgroundColor = UIColor(red: 238.0/255.0, green: 238.0/255.0, blue: 238.0/255.0, alpha: 1.0)
-        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), forState: .Normal)
+        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), for: UIControlState())
         button.titleLabel?.font = UIFont(name: "Arial", size: 25)
-        button.setTitle(String(htmlEncodedString: video.Title), forState: .Normal)
-        button.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+        button.setTitle(String(htmlEncodedString: video.Title), for: UIControlState())
+        button.imageView?.contentMode = UIViewContentMode.scaleAspectFit
         button.frame =  calculatePosition(index, image: image)
-        button.setBackgroundImage(image, forState: .Normal)
+        button.setBackgroundImage(image, for: UIControlState())
         button.tag = index - 5
-        button.addTarget(self, action: #selector(HomeSelectionController.tapped(_:)), forControlEvents: .PrimaryActionTriggered)
+        button.addTarget(self, action: #selector(HomeSelectionController.tapped(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         scroll.addSubview(button)
         scroll.clipsToBounds = true
     }
     
-    func chargeImageAsync(image: String, index: Int, video: Video){
-        let url = NSURL(string: image)
+    func chargeImageAsync(_ image: String, index: Int, video: Video){
+        let url = URL(string: image)
         if((url == nil || (url?.hashValue) == nil)){
             let image = UIImage(named: "ImageNotfound.png")
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 self.createButton(image!,index: index,video: video)
             }
         }else{
-            let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+            let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                if(data != nil){
                 let image = UIImage(data: data!)
                 if(image != nil){
-                dispatch_async(dispatch_get_main_queue()){
+                DispatchQueue.main.async{
                     self.createButton(image!,index: index,video: video)
                 }
                 }
-            }
+                }
+            })
             task.resume()
         }
     }

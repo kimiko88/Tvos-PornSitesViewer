@@ -11,15 +11,15 @@ import Foundation
 
 class Utils{
     
-    static func GetStringsByRegularExpression(stringWhereFind: NSString,regularexp : String) -> [String]
+    static func GetStringsByRegularExpression(_ stringWhereFind: NSString,regularexp : String) -> [String]
     {
                     var results = [String]()
     do {
-    let regex = try NSRegularExpression(pattern: regularexp, options: NSRegularExpressionOptions.CaseInsensitive)
+    let regex = try NSRegularExpression(pattern: regularexp, options: NSRegularExpression.Options.caseInsensitive)
     let range = NSMakeRange(0, stringWhereFind.length)
-    let matches = regex.matchesInString(stringWhereFind as String, options: NSMatchingOptions.WithoutAnchoringBounds, range: range)
+    let matches = regex.matches(in: stringWhereFind as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
     for match in matches{
-    results.append(stringWhereFind.substringWithRange(match.range))
+    results.append(stringWhereFind.substring(with: match.range))
     }
     }catch{
     print("error");
