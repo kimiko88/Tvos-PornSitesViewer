@@ -169,8 +169,13 @@ class VideoController: UIViewController {
                         {
                             title = "3gp quality"
                         }
-                        print(result)
+                        if(!self.downloadLinks.contains { $0.Link == result})
+                        {
                         self.downloadLinks.append(DownloadLink(link: result, title: title))
+                        }else
+                        {
+                            
+                        }
                     }
                 }
             }catch{
@@ -197,17 +202,36 @@ class VideoController: UIViewController {
         let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             do {
-                let regex = try NSRegularExpression(pattern: "player_quality_\\w+\\s+=\\s\'[^\']*\'", options: NSRegularExpression.Options.caseInsensitive)
+                let regex = try NSRegularExpression(pattern: "player_quality_\\w+=\".*?\"", options: NSRegularExpression.Options.caseInsensitive)
+                 let regexVariableCombination = try NSRegularExpression(pattern: "player_quality_\\w+=player.*?;", options: NSRegularExpression.Options.caseInsensitive)
                 let range = NSMakeRange(0, stringa.length)
-                let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
-                for match in matches{
+                let variables = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
+                let variablesCombination = regexVariableCombination.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
+                var variablesDictionary = [String:String]()
+                for match in variables{
                     let result = stringa.substring(with: match.range)
-                    var spliettd = result.characters.split{$0 == " "}.map(String.init)
-                    let title = spliettd[0]
-                    let link = spliettd[2].replacingOccurrences(of: "'", with: "")
-                        print(result)
-                        self.downloadLinks.append(DownloadLink(link: link, title: title))
+                    var splitted = result.characters.split{$0 == "="}.map(String.init)
+                    let nameVariable = splitted[0]
+                    var contentVariable = splitted[1].replacingOccurrences(of: "\"", with: "")
+                    let splittedCount = splitted.count
+                    var index = 2;
+                    while index < splittedCount{
+                        contentVariable.append(splitted[index].replacingOccurrences(of: "\"", with: ""))
+                        index += 1
                     }
+                    variablesDictionary[nameVariable] = contentVariable
+                    }
+                for match in variablesCombination{
+                    let result = stringa.substring(with: match.range)
+                    var splitted = result.characters.split{$0 == "="}.map(String.init)
+                    let title = splitted[0].replacingOccurrences(of: "player_quality_", with: "")
+                    let contentVariable = splitted[1].replacingOccurrences(of: ";", with: "").replacingOccurrences(of: " ", with: "").characters.split{$0 == "+"}.map(String.init)
+                    var link = ""
+                    for contVariable in contentVariable{
+                       link.append(variablesDictionary[contVariable]!)
+                    }
+                    self.downloadLinks.append(DownloadLink(link: link, title: title))
+                }
 //                }
             }catch{
                 print("error");
@@ -323,7 +347,7 @@ class VideoController: UIViewController {
                 let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
                     let result = stringa.substring(with: match.range)
-                    let link = Utils.GetStringsByRegularExpression(result as NSString, regularexp: "\"[^\"]*\"")[0].replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "//", with: "http://")
+                    let link = Utils.GetStringsByRegularExpression(result as NSString, regularexp: "\"[^\"]*\"")[0].replacingOccurrences(of: "\"", with: "")
                     let title = Utils.GetStringsByRegularExpression(result as NSString, regularexp: ">(\\w*)<")[0].replacingOccurrences(of: ">", with: "").replacingOccurrences(of: "<", with: "")
                     print(link)
                     if( link.characters.count > 10)

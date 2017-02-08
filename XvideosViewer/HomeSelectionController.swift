@@ -260,16 +260,16 @@ class HomeSelectionController: UIViewController {
         let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!.replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: "\t", with: "")
             var imageLink = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
-                "<imgsrc=\"([^\"]*)\".*?data-end=\"*\"[^>]*>")
+                "<imgsrc=\"([^\"]*)\".*?data-end=\".*?\"[^>]*>")
             var titleAndHref = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
-                "class=\"phimage\">(\\s*)<a\\s+(?:[^>]*?\\s+)?href=\"/view_video.php?([^\"]*)\"?\\stitle=\"([^\"]*)\"")
+                "class=\"title\"><a\\s+(?:[^>]*?\\s+)?href=\"/view_video.php?([^\"]*)\"?\\stitle=\"([^\"]*)\"")
             print(imageLink.count)
             print(titleAndHref.count)
             if(imageLink.count == titleAndHref.count)
             {
                 for i in 0 ..< titleAndHref.count
                 {
-                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString,regularexp: "data-smallthumb=\"[^\"]*\"")[0].replacingOccurrences(of: "data-smallthumb=\"", with: "").replacingOccurrences(of: "\"", with: "")
+                    let imglinkTemp = Utils.GetStringsByRegularExpression(imageLink[i] as NSString,regularexp: "data-mediumthumb=\"[^\"]*\"")[0].replacingOccurrences(of: "data-mediumthumb=\"", with: "").replacingOccurrences(of: "\"", with: "")
                     let href = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "href=\"[^\"]*\"")[0].replacingOccurrences(of: "href=\"",with: "http://www.pornhub.com").replacingOccurrences(of: "\"", with: "")
                           let title = Utils.GetStringsByRegularExpression(titleAndHref[i] as NSString, regularexp: "title=\"[^\"]*\"")[0].replacingOccurrences(of: "title=\"",with: "").replacingOccurrences(of: "\"", with: "").removingPercentEncoding
                     let video = Video(link: href, imageLink: imglinkTemp, title: title!)
