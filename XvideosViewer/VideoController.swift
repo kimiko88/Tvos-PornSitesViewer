@@ -105,7 +105,7 @@ class VideoController: UIViewController {
         let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             let strin = String(stringa)
-            let splitted = strin.characters.split{$0 == " "}.map(String.init)
+            let splitted = strin.split{$0 == " "}.map(String.init)
             for var i in 0 ..< splitted.count
             {
                 let oo = splitted[i]
@@ -122,7 +122,7 @@ class VideoController: UIViewController {
                             tempLink = splitted[i]
                         }
                         
-                        if(splitted[i].range(of: "\'>") != nil && tempLink.characters.count > 2){
+                        if(splitted[i].range(of: "\'>") != nil && tempLink.count > 2){
                             start = true
                         }
                         if(start)
@@ -210,7 +210,7 @@ class VideoController: UIViewController {
                 var variablesDictionary = [String:String]()
                 for match in variables{
                     let result = stringa.substring(with: match.range)
-                    var splitted = result.characters.split{$0 == "="}.map(String.init)
+                    var splitted = result.split{$0 == "="}.map(String.init)
                     let nameVariable = splitted[0]
                     var contentVariable = splitted[1].replacingOccurrences(of: "\"", with: "")
                     let splittedCount = splitted.count
@@ -223,9 +223,9 @@ class VideoController: UIViewController {
                     }
                 for match in variablesCombination{
                     let result = stringa.substring(with: match.range)
-                    var splitted = result.characters.split{$0 == "="}.map(String.init)
+                    var splitted = result.split{$0 == "="}.map(String.init)
                     let title = splitted[0].replacingOccurrences(of: "player_quality_", with: "")
-                    let contentVariable = splitted[1].replacingOccurrences(of: ";", with: "").replacingOccurrences(of: " ", with: "").characters.split{$0 == "+"}.map(String.init)
+                    let contentVariable = splitted[1].replacingOccurrences(of: ";", with: "").replacingOccurrences(of: " ", with: "").split{$0 == "+"}.map(String.init)
                     var link = ""
                     for contVariable in contentVariable{
                        link.append(variablesDictionary[contVariable]!)
@@ -263,10 +263,10 @@ class VideoController: UIViewController {
                 let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
                     let result = stringa.substring(with: match.range)
-                    let splitted = result.replacingOccurrences(of: "{", with: "").replacingOccurrences(of: "}", with: "").characters.split{$0 == ","}.map(String.init)
+                    let splitted = result.replacingOccurrences(of: "{", with: "").replacingOccurrences(of: "}", with: "").split{$0 == ","}.map(String.init)
                     for split in splitted
                     {
-                    let titlelink = split.characters.split{$0 == "\""}.map(String.init)
+                    let titlelink = split.split{$0 == "\""}.map(String.init)
                         if(titlelink.count > 2)
                         {
                         let title = titlelink[0].replacingOccurrences(of: "\"", with: "").replacingOccurrences(of: "{", with: "")
@@ -307,9 +307,9 @@ class VideoController: UIViewController {
                 let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
                     let result = stringa.substring(with: match.range)
-                    let splitted = result.characters.split{$0 == "\""}.map(String.init)
+                    let splitted = result.split{$0 == "\""}.map(String.init)
                     print(splitted)
-                        if(splitted.count > 2 && splitted[2].characters.count > 10)
+                        if(splitted.count > 2 && splitted[2].count > 10)
                         {
                             let title = splitted[0].replacingOccurrences(of: "\"", with: "")
                             print(title)
@@ -350,7 +350,7 @@ class VideoController: UIViewController {
                     let link = Utils.GetStringsByRegularExpression(result as NSString, regularexp: "\"[^\"]*\"")[0].replacingOccurrences(of: "\"", with: "")
                     let title = Utils.GetStringsByRegularExpression(result as NSString, regularexp: ">(\\w*)<")[0].replacingOccurrences(of: ">", with: "").replacingOccurrences(of: "<", with: "")
                     print(link)
-                    if( link.characters.count > 10)
+                    if( link.count > 10)
                     {
                         self.downloadLinks.append(DownloadLink(link: link, title: title))
                     }
@@ -384,7 +384,7 @@ class VideoController: UIViewController {
                 let matches = regex.matches(in: stringa as String, options: NSRegularExpression.MatchingOptions.withoutAnchoringBounds, range: range)
                 for match in matches{
                     let result = stringa.substring(with: match.range)
-                    let splitted = result.characters.split{$0 == "\""}.map(String.init)
+                    let splitted = result.split{$0 == "\""}.map(String.init)
                 if(splitted.count > 2)
                 {
                     let title = splitted[0]
@@ -446,7 +446,7 @@ class VideoController: UIViewController {
 //        task.resume()
 //    }
     
-    func tapped(_ sender: UIButton) {
+    @objc func tapped(_ sender: UIButton) {
         let object = self.downloadLinks[sender.tag]
         self.performSegue(withIdentifier: "SeeVideo", sender: object)
     }
@@ -468,9 +468,9 @@ class VideoController: UIViewController {
         let height = CGFloat(180)
         let x = (index % numImagePerRow) * Int(width) + 20 * (index % numImagePerRow)
         let y = index / numImagePerRow * Int(height) + 20 * (index / numImagePerRow)
-        let button = UIButton(type: UIButtonType.system)
+        let button = UIButton(type: UIButton.ButtonType.system)
         button.frame =  CGRect(x: CGFloat(x), y: CGFloat(y), width: width, height: height)
-        button.setTitle(download.Title, for: UIControlState())
+        button.setTitle(download.Title, for: UIControl.State())
         button.tag = index
         button.addTarget(self, action: #selector(VideoController.tapped(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true

@@ -75,7 +75,7 @@ class ViewController: UIViewController {
     
     
 
-    func tappedSite(_ sender: UIButton) {
+    @objc func tappedSite(_ sender: UIButton) {
         let object = self.sites[sender.tag]
         self.performSegue(withIdentifier: "HomeSelection", sender: object)
     }
@@ -126,7 +126,10 @@ class ViewController: UIViewController {
             }
         }else{
             let task = URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                let image = UIImage(data: data!)
+                var image = UIImage(named: "ImageNotfound.png")
+                if(data != nil){
+                    image = UIImage(data: data!)
+                }
                 DispatchQueue.main.async{
                     self.createSiteButton(image!,index: index,name: name)
                 }
@@ -137,16 +140,16 @@ class ViewController: UIViewController {
     
     
     func createSiteButton(_ image: UIImage, index: Int,name: String){
-        let button = UIButton(type: UIButtonType.system)
-        button.contentVerticalAlignment = UIControlContentVerticalAlignment.bottom
+        let button = UIButton(type: UIButton.ButtonType.system)
+        button.contentVerticalAlignment = UIControl.ContentVerticalAlignment.bottom
         button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.titleLabel?.backgroundColor = UIColor(red: 238.0/255.0, green: 238.0/255.0, blue: 238.0/255.0, alpha: 1.0)
-        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), for: UIControlState())
+        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), for: UIControl.State())
         button.titleLabel?.font = UIFont(name: "Arial", size: 25)
-        button.setTitle(name, for: UIControlState())
-        button.imageView?.contentMode = UIViewContentMode.scaleAspectFit
+        button.setTitle(name, for: UIControl.State())
+        button.imageView?.contentMode = UIView.ContentMode.scaleAspectFit
         button.frame =  calculatePositionSite(index, image: image)
-        button.setBackgroundImage(image, for: UIControlState())
+        button.setBackgroundImage(image, for: UIControl.State())
         button.tag = index
         button.addTarget(self, action: #selector(ViewController.tappedSite(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true

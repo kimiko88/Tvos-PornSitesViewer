@@ -156,7 +156,7 @@ class HomeSelectionController: UIViewController {
         let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
             let strin = String(stringa)
-            let splitted = strin.characters.split{$0 == " "}.map(String.init)
+            let splitted = strin.split{$0 == " "}.map(String.init)
             
             for var i in 0 ..< splitted.count
             {
@@ -214,14 +214,14 @@ class HomeSelectionController: UIViewController {
     func XvideosCharge(_ url: URL){
         let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
-            var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "<img\\s+(?:[^>]*?\\s+)?src=\"http://img\\-([^\"]*)\"")
-            var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\s+href=\"/video([^\"]*)\"?\\stitle=\"([^\"]*)\"")
+            let imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "<img\\s+(?:[^>]*?\\s+)?src=\"http://img\\-([^\"]*)\"")
+            let titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\s+href=\"/video([^\"]*)\"?\\stitle=\"([^\"]*)\"")
             if(imageLink.count == titleAndHref.count)
             {
                 for i in 0 ..< titleAndHref.count
                 {
                     let imglinkTemp = imageLink[i].replacingOccurrences(of: "<img src=",with: "").replacingOccurrences(of: "\"", with: "")
-                    let href = titleAndHref[i].replacingOccurrences(of: "<a ",with: "").replacingOccurrences(of: "href=\"",with: "http://www.xvideos.com").characters.split{$0 == "\""}.map(String.init)
+                    let href = titleAndHref[i].replacingOccurrences(of: "<a ",with: "").replacingOccurrences(of: "href=\"",with: "http://www.xvideos.com").split{$0 == "\""}.map(String.init)
                     let video = Video(link: href[0], imageLink: imglinkTemp, title: href[2])
                     self.videos.append(video)
                 }
@@ -259,9 +259,9 @@ class HomeSelectionController: UIViewController {
     func PornhubCharge(_ url: URL){
         let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!.replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: "\t", with: "")
-            var imageLink = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
+            let imageLink = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
                 "<imgsrc=\"([^\"]*)\".*?data-end=\".*?\"[^>]*>")
-            var titleAndHref = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
+            let titleAndHref = Utils.GetStringsByRegularExpression(stringa as NSString, regularexp:
                 "class=\"title\"><a\\s+(?:[^>]*?\\s+)?href=\"/view_video.php?([^\"]*)\"?\\stitle=\"([^\"]*)\"")
             print(imageLink.count)
             print(titleAndHref.count)
@@ -310,8 +310,8 @@ class HomeSelectionController: UIViewController {
     func RedTubeCharge(_ url: URL){
         let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
-            var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "span>(\\s*)<img\\s+(?:[^>]*?\\s+)?src=\"?([^\"]*)\"?\\s")
-            var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\s+(?:[^>]*?\\s+)?class=\"video-thumb([^\"]*)\"?")
+            let imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "span>(\\s*)<img\\s+(?:[^>]*?\\s+)?src=\"?([^\"]*)\"?\\s")
+            let titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\s+(?:[^>]*?\\s+)?class=\"video-thumb([^\"]*)\"?")
             print(imageLink)
             print(titleAndHref)
             print(imageLink.count)
@@ -361,8 +361,8 @@ class HomeSelectionController: UIViewController {
     func Tube8Charge(_ url: URL){
         let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
-            var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "class=\"videoThumbs\"\\s+(?:[^>]*?\\s+)?src=\"?([^\"]*)\"?")
-            var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "video_title\">(\\s*)<a\\s+(?:[^>]*?\\s+)?href=\"?([^\"]*)\"?\\stitle=\"?([^\"]*)\"?")
+            let imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "class=\"videoThumbs\"\\s+(?:[^>]*?\\s+)?src=\"?([^\"]*)\"?")
+            let titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "video_title\">(\\s*)<a\\s+(?:[^>]*?\\s+)?href=\"?([^\"]*)\"?\\stitle=\"?([^\"]*)\"?")
             print(imageLink)
             print(titleAndHref)
             print(imageLink.count)
@@ -414,8 +414,8 @@ class HomeSelectionController: UIViewController {
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
         
             let imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "data-original=\"?([^\"]*)\"?")
-            var href = Utils.GetStringsByRegularExpression(stringa, regularexp: "js-thumb\"\\shref=\"[^\"]*\"")
-              var title = Utils.GetStringsByRegularExpression(stringa, regularexp: "info\">(\\s*)<span\\s+(?:[^>]*?\\s+)?class=\"title\">(.*?)<")
+            let href = Utils.GetStringsByRegularExpression(stringa, regularexp: "js-thumb\"\\shref=\"[^\"]*\"")
+            let title = Utils.GetStringsByRegularExpression(stringa, regularexp: "info\">(\\s*)<span\\s+(?:[^>]*?\\s+)?class=\"title\">(.*?)<")
         
             let uniqueimage = imageLink.unique
             print(uniqueimage.count)
@@ -464,8 +464,8 @@ class HomeSelectionController: UIViewController {
     func XTubeCharge(_ url: URL){
         let task = URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
             let stringa = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!
-            var imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "video\"(\\s*)>(\\s*)<(.*?)>")
-            var titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\shref=\"/video-watch(.*?)>")
+            let imageLink = Utils.GetStringsByRegularExpression(stringa, regularexp: "video\"(\\s*)>(\\s*)<(.*?)>")
+            let titleAndHref = Utils.GetStringsByRegularExpression(stringa, regularexp: "<a\\shref=\"/video-watch(.*?)>")
             print(imageLink)
             print(titleAndHref)
             print(imageLink.count)
@@ -772,10 +772,10 @@ class HomeSelectionController: UIViewController {
     }
     
     func searchButton(_ index: Int){
-        let button = UIButton(type: UIButtonType.system)
+        let button = UIButton(type: UIButton.ButtonType.system)
         button.backgroundColor = UIColor.black
         button.frame =  calculatePosition(index)
-        button.setTitle("Search", for: UIControlState())
+        button.setTitle("Search", for: UIControl.State())
         //        button.tag = index + 1)
         button.addTarget(self, action: #selector(HomeSelectionController.search(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
@@ -784,20 +784,20 @@ class HomeSelectionController: UIViewController {
     
     
     func homeButton(_ index: Int){
-        let button = UIButton(type: UIButtonType.system)
+        let button = UIButton(type: UIButton.ButtonType.system)
         button.backgroundColor = UIColor.black
         button.frame =  calculatePosition(index)
-        button.setTitle("Home", for: UIControlState())
+        button.setTitle("Home", for: UIControl.State())
         //        button.tag = index + 1)
         button.addTarget(self, action: #selector(HomeSelectionController.home(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
         scroll.addSubview(button)
     }
     func nextButton(_ index: Int){
-        let button = UIButton(type: UIButtonType.system)
+        let button = UIButton(type: UIButton.ButtonType.system)
         button.backgroundColor = UIColor.black
         button.frame =  calculatePosition(index)
-        button.setTitle("Next Page", for: UIControlState())
+        button.setTitle("Next Page", for: UIControl.State())
         button.tag = index
         button.addTarget(self, action: #selector(HomeSelectionController.next(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
@@ -808,7 +808,7 @@ class HomeSelectionController: UIViewController {
     }
     
     func sortButton(_ index: Int,text: Selector){
-        let button = UIButton(type: UIButtonType.system)
+        let button = UIButton(type: UIButton.ButtonType.system)
         let title = text.description.replacingOccurrences(of: ":", with: "")
         if(selectedSort == title)
         {
@@ -817,7 +817,7 @@ class HomeSelectionController: UIViewController {
             button.backgroundColor = UIColor.black
         }
         button.frame =  calculatePosition(index)
-        button.setTitle(title,for: UIControlState())
+        button.setTitle(title,for: UIControl.State())
         //        button.tag = index + 1)
         button.addTarget(self, action: text, for: .primaryActionTriggered)
         
@@ -828,9 +828,9 @@ class HomeSelectionController: UIViewController {
     
     
     func previousButton(_ index: Int){
-        let button = UIButton(type: UIButtonType.system)
+        let button = UIButton(type: UIButton.ButtonType.system)
         button.frame =  calculatePosition(index)
-        button.setTitle("Previous Page", for: UIControlState())
+        button.setTitle("Previous Page", for: UIControl.State())
         button.tag = index
         button.addTarget(self, action: #selector(HomeSelectionController.previous(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true
@@ -838,13 +838,13 @@ class HomeSelectionController: UIViewController {
         //        scroll.clipsToBounds = true
     }
     
-    func tapped(_ sender: UIButton) {
+    @objc func tapped(_ sender: UIButton) {
         let object = self.videos[sender.tag]
         self.performSegue(withIdentifier: "Video", sender: object)
     }
     
 
-    func next(_ sender: UIButton) {
+    @objc func next(_ sender: UIButton) {
         actualPage += 1
         //TODO ADD SORT PAGINATION
         if(!isSearch){
@@ -866,7 +866,7 @@ class HomeSelectionController: UIViewController {
     }
     
     
-    func previous(_ sender: UIButton) {
+    @objc func previous(_ sender: UIButton) {
         actualPage -= 1
         if(!isSearch){
             if(!isSorted)
@@ -890,13 +890,13 @@ class HomeSelectionController: UIViewController {
         }
     }
     
-    func home(_ sender: UIButton){
+    @objc func home(_ sender: UIButton){
         self.actualPage = 0
         self.showPage(actualPage)
     }
     
     
-    func search(_ sender: UIButton){
+    @objc func search(_ sender: UIButton){
         self.actualPage = 0
         self.searchText(field.text!)
     }
@@ -960,16 +960,16 @@ class HomeSelectionController: UIViewController {
     
     
     func createButton(_ image: UIImage, index: Int,video: Video){
-        let button = UIButton(type: UIButtonType.system)
-        button.contentVerticalAlignment = UIControlContentVerticalAlignment.bottom
+        let button = UIButton(type: UIButton.ButtonType.system)
+        button.contentVerticalAlignment = UIControl.ContentVerticalAlignment.bottom
         button.titleLabel?.lineBreakMode = .byTruncatingTail
         button.titleLabel?.backgroundColor = UIColor(red: 238.0/255.0, green: 238.0/255.0, blue: 238.0/255.0, alpha: 1.0)
-        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), for: UIControlState())
+        button.setTitleColor(UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), for: UIControl.State())
         button.titleLabel?.font = UIFont(name: "Arial", size: 25)
-        button.setTitle(String(htmlEncodedString: video.Title), for: UIControlState())
-        button.imageView?.contentMode = UIViewContentMode.scaleAspectFit
+        button.setTitle(String(htmlEncodedString: video.Title), for: UIControl.State())
+        button.imageView?.contentMode = UIView.ContentMode.scaleAspectFit
         button.frame =  calculatePosition(index, image: image)
-        button.setBackgroundImage(image, for: UIControlState())
+        button.setBackgroundImage(image, for: UIControl.State())
         button.tag = index - 5
         button.addTarget(self, action: #selector(HomeSelectionController.tapped(_:)), for: .primaryActionTriggered)
         button.clipsToBounds = true

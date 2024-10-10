@@ -25,7 +25,7 @@ class AVVideoPlayerController: AVPlayerViewController{
     
     
     
-    func tick() {//Failed case
+    @objc func tick() {//Failed case
         if(player!.status == .failed)
         {
             let url = URL(string:  String(htmlEncodedString: downloadVideo.Link))
@@ -39,14 +39,15 @@ class AVVideoPlayerController: AVPlayerViewController{
 extension String {
     init(htmlEncodedString: String) {
         let encodedData = htmlEncodedString.data(using: String.Encoding.utf8)!
-        let attributedOptions: [ String: AnyObject ] = [ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType as AnyObject, NSCharacterEncodingDocumentAttribute: NSNumber(value: String.Encoding.utf8.rawValue) as AnyObject ]
+        let options = [NSAttributedString.DocumentReadingOptionKey.documentType:
+                NSAttributedString.DocumentType.html]
         var attributedString = NSAttributedString()
         do{
-            attributedString = try NSAttributedString(data: encodedData, options: attributedOptions, documentAttributes: nil)
+            attributedString = try NSAttributedString(data: encodedData, options: options, documentAttributes: nil)
             
         }catch{
             print("error")
         }
-        self.init(attributedString.string)!
+        self.init(stringLiteral: attributedString.string)
     }
 }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
+   uuid = "06131A1E-BFC1-42BB-943C-F9D10B62E34C"
    type = "1"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "1548C6B1-5B9C-4B37-86EB-439E6697C319"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -22,6 +24,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "9053F824-74A7-4410-B674-C5C9F4CAE94E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -33,6 +36,70 @@
             endingLineNumber = "268"
             landmarkName = "PornhubCharge(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "65D64D18-E717-448A-9CF3-87C31B03B162"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XvideosViewer/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "chargeSiteImageAsync(_:index:name:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "44A33DE6-2A79-416F-999D-3373BE7E4641"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XvideosViewer/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "chargeSiteImageAsync(_:index:name:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "44A33DE6-2A79-416F-999D-3373BE7E4641 - 97caa1b8ef19865c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in XvideosViewer.ViewController.chargeSiteImageAsync(_: Swift.String, index: Swift.Int, name: Swift.String) -&gt; ()"
+                  moduleName = "XvideosViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/fabriziochimienti/Desktop/Programmazione/Swift/Tvos-PornSitesViewer/XvideosViewer/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "346">
+               </Location>
+               <Location
+                  uuid = "44A33DE6-2A79-416F-999D-3373BE7E4641 - 97caa1b8ef19861e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in XvideosViewer.ViewController.chargeSiteImageAsync(_: Swift.String, index: Swift.Int, name: Swift.String) -&gt; ()"
+                  moduleName = "XvideosViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/fabriziochimienti/Desktop/Programmazione/Swift/Tvos-PornSitesViewer/XvideosViewer/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "131"
+                  endingLineNumber = "131"
+                  offsetFromSymbolStart = "514">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
